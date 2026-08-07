@@ -1,18 +1,19 @@
+using OrderManagement.Domain.ValueObjects;
+
 namespace OrderManagement.Domain.Entities;
 
 public class Customer
 {
     public Guid Id { get; private set; }
     public string FullName { get; private set; }
-    public string Document { get; private set; }
+    public Document CpfCnpj { get; private set; }
 
-    public Customer(string fullName, string document)
+    public Customer(string fullName, Document cpfCnpj)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fullName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(document);
-
+        ArgumentNullException.ThrowIfNull(cpfCnpj);
         Id = Guid.NewGuid();
         FullName = fullName;
-        Document = document;
+        CpfCnpj = cpfCnpj;
     }
 }
