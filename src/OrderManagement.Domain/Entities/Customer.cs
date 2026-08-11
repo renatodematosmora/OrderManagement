@@ -8,6 +8,8 @@ public class Customer
     public string FullName { get; private set; }
     public Document CpfCnpj { get; private set; }
 
+    private Customer() { } // EF Core
+
     public Customer(string fullName, Document cpfCnpj)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fullName);

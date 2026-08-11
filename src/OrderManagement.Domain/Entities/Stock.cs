@@ -6,6 +6,8 @@ public class Stock
     public Guid ProductId { get; private set; }
     public int Quantity { get; private set; }
 
+    private Stock() { } // EF Core
+
     public Stock(Guid productId, int quantity)
     {
         if (productId == Guid.Empty)

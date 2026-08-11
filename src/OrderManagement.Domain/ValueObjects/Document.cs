@@ -2,13 +2,13 @@ namespace OrderManagement.Domain.ValueObjects;
 
 public record Document
 {
-    public string CpfCnpj { get; }
+    public string Value { get; }
 
-    public Document(string cpfCnpj)
+    public Document(string value)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(cpfCnpj);
-        if (cpfCnpj.Length != 11 && cpfCnpj.Length != 14)
-            throw new ArgumentException("CPF/CNPJ inválido.", nameof(cpfCnpj));
-        CpfCnpj = cpfCnpj;
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+        if (value.Length != 11 && value.Length != 14)
+            throw new ArgumentException("CPF/CNPJ inválido.", nameof(value));
+        Value = value;
     }
 }

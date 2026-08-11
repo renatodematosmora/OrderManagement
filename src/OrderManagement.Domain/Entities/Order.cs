@@ -13,6 +13,8 @@ public class Order
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
     public Money OrderAmount => _orderItems.Aggregate(Money.Zero, (total, item) => total + item.ItemAmount);
 
+    private Order() { } // EF Core
+
     public Order(Guid customerId)
     {
         if (customerId == Guid.Empty)
