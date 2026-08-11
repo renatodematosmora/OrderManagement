@@ -9,6 +9,8 @@ public class Product
     public string Description { get; private set; }
     public Money Price { get; private set; }
 
+    private Product() { } // EF Core
+
     public Product(string name, string description, Money price)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

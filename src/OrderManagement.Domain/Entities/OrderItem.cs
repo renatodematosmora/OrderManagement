@@ -11,6 +11,8 @@ public class OrderItem
     public Money UnitPrice { get; private set; }
     public Money ItemAmount => UnitPrice * Quantity;
 
+    private OrderItem() { } // EF Core
+
     internal OrderItem(Guid orderId, Guid productId, int quantity, Money unitPrice)
     {
         if (orderId == Guid.Empty)
