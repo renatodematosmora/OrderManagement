@@ -51,7 +51,7 @@ public class OrderTests
     }
 
     [Fact]
-    public void Nao_deve_permitir_pedido_de_retirada_ser_entregue()
+    public void Nao_deve_permitir_pedido_de_retirada_ser_enviado()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -64,13 +64,17 @@ public class OrderTests
     }
 
     [Fact]
-    public void Nao_deve_permitir_pedido_cancelado_sem_CancelledBy_e_CancellationReason()
-    {
-        // Arrange
-        var customerId = Guid.NewGuid();
-        var order = new Order(customerId, DeliveryType.Delivery);
+public void Deve_preencher_CancelledBy_e_CancellationReason_ao_cancelar()
+{
+    // Arrange
+    var order = new Order(Guid.NewGuid(), DeliveryType.Delivery);
 
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => order.Cancel(CancelledBy.Customer, string.Empty));
-    }
+    // Act
+    order.Cancel(CancelledBy.Customer, "Cliente desistiu da compra");
+
+    // Assert
+    Assert.Equal(OrderStatus.Cancelled, order.Status);
+    Assert.Equal(CancelledBy.Customer, order.CancelledBy);
+    Assert.Equal("Cliente desistiu da compra", order.CancellationReason);
+}
 }
