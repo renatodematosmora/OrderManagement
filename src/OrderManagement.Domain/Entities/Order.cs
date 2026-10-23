@@ -1,3 +1,4 @@
+using OrderManagement.Domain.Discounts;
 using OrderManagement.Domain.Enums;
 using OrderManagement.Domain.ValueObjects;
 
@@ -94,5 +95,15 @@ public class Order
         ChangeStatus(OrderStatus.Cancelled);
         CancelledBy = cancelledBy;
         CancellationReason = reason;
+    }
+
+    public Money CalculateAmountWithDiscount(IDiscountStrategy discountStrategy)
+    {
+        ArgumentNullException.ThrowIfNull(discountStrategy);
+
+        var amount = OrderAmount;
+        var discount = discountStrategy.CalculateDiscount(amount);
+
+        return new Money(amount.Amount - discount.Amount);
     }
 }

@@ -1,5 +1,8 @@
+using OrderManagement.Domain.Discounts;
 using OrderManagement.Domain.Entities;
 using OrderManagement.Domain.Enums;
+using OrderManagement.Domain.ValueObjects;
+
 using Xunit;
 
 namespace OrderManagement.Domain.Tests;
@@ -64,17 +67,45 @@ public class OrderTests
     }
 
     [Fact]
-public void Deve_preencher_CancelledBy_e_CancellationReason_ao_cancelar()
-{
-    // Arrange
-    var order = new Order(Guid.NewGuid(), DeliveryType.Delivery);
+    public void Deve_preencher_CancelledBy_e_CancellationReason_ao_cancelar()
+    {
+        // Arrange
+        var order = new Order(Guid.NewGuid(), DeliveryType.Delivery);
 
-    // Act
-    order.Cancel(CancelledBy.Customer, "Cliente desistiu da compra");
+        // Act
+        order.Cancel(CancelledBy.Customer, "Cliente desistiu da compra");
 
-    // Assert
-    Assert.Equal(OrderStatus.Cancelled, order.Status);
-    Assert.Equal(CancelledBy.Customer, order.CancelledBy);
-    Assert.Equal("Cliente desistiu da compra", order.CancellationReason);
-}
+        // Assert
+        Assert.Equal(OrderStatus.Cancelled, order.Status);
+        Assert.Equal(CancelledBy.Customer, order.CancelledBy);
+        Assert.Equal("Cliente desistiu da compra", order.CancellationReason);
+    }
+
+    [Fact]
+    public void Aplica_desconto_percentual_ao_pedido_com_item()
+    {
+        // Arrange
+        var order = new Order(Guid.NewGuid(), DeliveryType.Delivery);
+        order.AddItem(Guid.NewGuid(), 2, new Money(50m));
+
+        // Act
+        var amountWithDiscount = order.CalculateAmountWithDiscount(new PercentageDiscountStrategy(0.1m));
+
+        // Assert
+        Assert.Equal(new Money(90m), amountWithDiscount);
+    }
+
+    [Fact]
+    public void Aplica_desconto_fixo_ao_pedido_com_item()
+    {
+        // Arrange
+        var order = new Order(Guid.NewGuid(), DeliveryType.Delivery);
+        order.AddItem(Guid.NewGuid(), 2, new Money(50m));
+
+        // Act
+        var amountWithDiscount = order.CalculateAmountWithDiscount(new FixedAmountDiscountStrategy(new Money(10m)));
+
+        // Assert
+        Assert.Equal(new Money(90m), amountWithDiscount);
+    }
 }
