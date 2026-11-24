@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using OrderManagement.Domain.Entities;
 
 namespace OrderManagement.Infrastructure.Configurations;

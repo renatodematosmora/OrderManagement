@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using OrderManagement.Domain.Entities;
 
 namespace OrderManagement.Infrastructure.Configurations;
@@ -28,7 +29,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithOne()
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder.HasOne<Customer>()
         .WithMany()
         .HasForeignKey(o => o.CustomerId)

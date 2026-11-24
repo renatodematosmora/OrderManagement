@@ -21,11 +21,17 @@ public class OrderItem
             throw new ArgumentException("ProductId não pode ser vazio.", nameof(productId));
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
         ArgumentNullException.ThrowIfNull(unitPrice);
-        
+
         Id = Guid.NewGuid();
         OrderId = orderId;
         ProductId = productId;
         Quantity = quantity;
         UnitPrice = unitPrice;
+    }
+
+    internal void IncreaseQuantity(int quantity)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+        Quantity = checked(Quantity + quantity);
     }
 }

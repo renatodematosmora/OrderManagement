@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using OrderManagement.Domain.Entities;
 
 namespace OrderManagement.Infrastructure.Contexts;

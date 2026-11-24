@@ -4,7 +4,7 @@ using OrderManagement.Domain.ValueObjects;
 
 namespace OrderManagement.Domain.Entities;
 
-public class Order
+public sealed class Order
 {
     public Guid Id { get; private set; }
     public Guid CustomerId { get; private set; }
@@ -31,20 +31,39 @@ public class Order
 
     private Order() { } // EF Core
 
-    public Order(Guid customerId, DeliveryType deliveryType)
+    public Order(Guid customerId, DeliveryType deliveryType, IEnumerable<NewOrderItem> items)
     {
         if (customerId == Guid.Empty)
             throw new ArgumentException("CustomerId não pode ser vazio.", nameof(customerId));
+
+        var listItems = items?.ToList() ?? throw new ArgumentNullException(nameof(items), "A lista de itens do pedido não pode ser nula.");
+        if (listItems.Count == 0)
+            throw new ArgumentException("O pedido deve conter pelo menos um item.", nameof(items));
 
         Id = Guid.NewGuid();
         CustomerId = customerId;
         OrderDate = DateTime.UtcNow;
         Status = OrderStatus.PendingApproval;
         DeliveryType = deliveryType;
+
+        foreach (var item in listItems)
+            AddItem(item.ProductId, item.Quantity, item.UnitPrice);
     }
 
     public void AddItem(Guid productId, int quantity, Money unitPrice)
     {
+        ArgumentNullException.ThrowIfNull(unitPrice);
+        var existingItem = _orderItems.FirstOrDefault(item => item.ProductId == productId);
+
+        if (existingItem != null)
+        {
+            if (existingItem.UnitPrice != unitPrice)
+                throw new InvalidOperationException("Não é possível adicionar o mesmo produto com preços unitários diferentes.");
+
+            existingItem.IncreaseQuantity(quantity);
+            return;
+        }
+
         var orderItem = new OrderItem(Id, productId, quantity, unitPrice);
         _orderItems.Add(orderItem);
     }
