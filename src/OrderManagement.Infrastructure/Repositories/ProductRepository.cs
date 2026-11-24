@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using OrderManagement.Application.Interfaces.Repositories;
 using OrderManagement.Domain.Entities;
 using OrderManagement.Infrastructure.Contexts;
@@ -22,5 +23,10 @@ public class ProductRepository : IProductRepository
     public async Task AddAsync(Product product, CancellationToken cancellationToken = default)
     {
         await _context.Products.AddAsync(product, cancellationToken);
+    }
+
+    public async Task<List<Product>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        return await _context.Products.AsNoTracking().Where(p => ids.Contains(p.Id)).ToListAsync(cancellationToken);
     }
 }

@@ -71,7 +71,7 @@ public class DiscountStrategyTests
 
         // Act 
         var discount = strategy.CalculateDiscount(new Money(30m));
-        
+
         // Assert
         Assert.Equal(new Money(10m), discount);
     }
@@ -84,7 +84,7 @@ public class DiscountStrategyTests
 
         // Act 
         var discount = strategy.CalculateDiscount(new Money(30m));
-        
+
         // Assert
         Assert.Equal(new Money(30m), discount);
     }
